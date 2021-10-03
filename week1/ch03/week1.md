@@ -7,27 +7,27 @@
 ```
 #pragma once
 #ifndef List.h
-struct Node;
-typedef struct Node *ptrToNode;
-typedef ptrToNode List;
-typedef ptrToNode Position;
+struct Node; //定义一个结构体
+typedef struct Node *ptrToNode; //定义一个指向结构体的指针
+typedef ptrToNode List; //该指针起别名
+typedef ptrToNode Position;//起别名
 
-typedef int ElementType;
+typedef int ElementType;//int类型测试类型，若是其他类型数据，更改即可
 
-List CreateList();
-List MakeEmpty(List L);
-int IsEmpty(List L);
-int IsLast(Position P, List L);
-void PrintList(const List L);
-Position Find(ElementType X, List L);
-void Delete(ElementType X, List L);
-Position FindPrevious(ElementType X, List L);
-void Insert(ElementType X, List L, Position P);
-void DeleteList(List L);
-Position Header(List L);
-Position First(List L);
-Position Advance(Position P);
-ElementType Data(Position P);
+List CreateList();//创建链表节点
+List MakeEmpty(List L);//将链表清空
+int IsEmpty(List L);//判断是否为空
+int IsLast(Position P, List L);//判断是否是链表尾部
+void PrintList(const List L);//打印链表
+Position Find(ElementType X, List L);//查询某值第一次出现的位置
+void Delete(ElementType X, List L);//删除某元素
+Position FindPrevious(ElementType X, List L);//查询某值的前一节点位置
+void Insert(ElementType X, List L, Position P);//插入节点
+void DeleteList(List L);//删除链表
+Position Header(List L);//头节点
+Position First(List L);//第一个节点
+Position Advance(Position P);//返回某节点的下一节点
+ElementType Data(Position P);//返回该位置的值
 
 #endif // List.h
 
@@ -49,39 +49,39 @@ struct Node
 
 List CreateList()
 {
-	List L =(Node *) malloc(sizeof(struct Node));
+	List L =(Node *) malloc(sizeof(struct Node));//分配空间
 	if (L == NULL)
 		printf("out of memory");
-	L->Next = NULL;
+	L->Next = NULL;//创建的新节点都会指向空
 	return L;
 }
 List MakeEmpty(List L)
 {
-	if (L != NULL)
+	if (L != NULL)//不为空就删除
 		DeleteList(L);
-	L = (Node*)malloc(sizeof(struct Node));
+	L = (Node*)malloc(sizeof(struct Node));//控制空间分配
 	if (L == NULL)
 		printf("Out of memory");
-	L->Next = NULL;
+	L->Next = NULL;//直到为空
 	return L;
 }
 int IsEmpty(List L)
 {
-	return L->Next == NULL;
+	return L->Next == NULL;//判断链表是否指向空
 }
 int IsLast(Position P, List L)
 {
-	return P->Next == NULL;
+	return P->Next == NULL;//判断该节点是否指向空
 }
 void PrintList(const List L)
 {
-	Position P = Header(L);
+	Position P = Header(L);//指向头节点，从头节点开始
 
-	if (IsEmpty(L))
+	if (IsEmpty(L))//判断是否为空
 		printf("Empty list\n");
 	else
 	{
-		while (!IsLast(P, L))
+		while (!IsLast(P, L))//不为空，就打印输出
 		{
 			P = Advance(P);
 			printf("%d ", Data(P));
@@ -95,18 +95,19 @@ Position Find(ElementType X, List L)
 {
 	Position P;
 	P = L->Next;
-	while (P != NULL&&P->Element != X)
+	while (P != NULL&&P->Element != X)若不为空且值不等于X
 	{
-		P = P->Next;
+		P = P->Next;//指向下一节点
 	}
 	return P;
 }
 void Delete(ElementType X, List L)
 {
 	Position P;
-	P = FindPrevious(X, L);
-	if (!IsLast(P, L)) {
-		Position TmpCell = P->Next;
+	P = FindPrevious(X, L);//找到前一节点
+	if (!IsLast(P, L)) //如果不为最后一个，就删除
+	{
+		Position TmpCell = P->Next;//利用临时变量来删除
 		P->Next = TmpCell->Next;
 		free(TmpCell);
 	}
@@ -121,13 +122,13 @@ Position FindPrevious(ElementType X, List L)
 }
 void Insert(ElementType X, List L, Position P)
 {
-	Position TmpCell;
+	Position TmpCell;//定义临时变量
 
-	TmpCell = (Node *)malloc(sizeof(struct Node));
+	TmpCell = (Node *)malloc(sizeof(struct Node));//分配空间
 	if (TmpCell == NULL)
 		printf("Out of space!!!");
 
-	TmpCell->Element = X;
+	TmpCell->Element = X;//利用临时变量来插入节点
 	TmpCell->Next = P->Next;
 	P->Next = TmpCell;
 }
@@ -137,7 +138,7 @@ void DeleteList(List L)
 	p = L->Next;
 	L->Next = NULL;
 	while (p != NULL) {
-		Position tmp;
+		Position tmp;//借助临时变量来删除节点
 		tmp = p->Next;
 		free(p);
 		p = tmp;
@@ -145,19 +146,19 @@ void DeleteList(List L)
 }
 Position Header(List L)
 {
-	return L;
+	return L;//返回头节点指针
 }
 Position First(List L)
 {
-	return L->Next;
+	return L->Next;//返回第一节点指针
 }
 Position Advance(Position P)
 {
-	return P->Next;
+	return P->Next;//返回指针
 }
 ElementType Data(Position P)
 {
-	return P->Element;
+	return P->Element;//返回数据
 }
 ```
 
@@ -169,31 +170,31 @@ ElementType Data(Position P)
 
 int main()
 {
-	List L;
+	List L;//初始化各项数据
 	Position P;
 	int i;
 	L = MakeEmpty(NULL);
 	P = Header(L);
-	PrintList(L);
+	PrintList(L);//打印
 
 	for (i = 0; i < 10; i++)
 	{
-		Insert(i, L, P);
-		PrintList(L);
-		P = Advance(P);
+		Insert(i, L, P);//插入节点
+		PrintList(L);//打印链表
+		P = Advance(P);//移动节点
 	}
 	for (i = 0; i < 10; i += 2)
-		Delete(i, L);
+		Delete(i, L);//删除偶数节点
 
 	for (i = 0; i < 10; i++)
-		if ((i % 2 == 0) == (Find(i, L) != NULL))
+		if ((i % 2 == 0) == (Find(i, L) != NULL))//判断偶节点值是否不为0
 			printf("Find fails\n");
 
 	printf("Finished deletions\n");
 
-	PrintList(L);
+	PrintList(L);//打印链表
 
-	DeleteList(L);
+	DeleteList(L);//删除链表
 	getchar();
 	return 0;
 
@@ -208,28 +209,28 @@ int main()
 ```
 #pragma once
 #ifndef Cursor.h
-#define SpaceSize 100
+#define SpaceSize 100 //定义数组大小
 typedef int PtrToNode;
 typedef PtrToNode List;
 typedef PtrToNode Position;
 
 
 typedef int ElementType;
-void InitializeCursorSpace(void);
+void InitializeCursorSpace(void);//初始化游标大小
 
-List MakeEmpty(List L);
-int IsEmpty(const List L);
-int IsLast(const Position P, const List L);
-void PrintList(const List L);
-Position Find(ElementType X, const List L);
-void Delete(ElementType X, List L);
-Position FindPrevious(ElementType X, const List L);
-void Insert(ElementType X, List L, Position P);
-void DeleteList(List L);
-Position Header(const List L);
-Position First(const List L);
-Position Advance(const Position P);
-ElementType Retrieve(const Position P);
+List MakeEmpty(List L);//置空
+int IsEmpty(const List L);//判断是否为空
+int IsLast(const Position P, const List L);//判断是否为尾
+void PrintList(const List L);//打印链表
+Position Find(ElementType X, const List L);//查询位置
+void Delete(ElementType X, List L);//删除某值
+Position FindPrevious(ElementType X, const List L);//查寻某值的前一节点
+void Insert(ElementType X, List L, Position P);//插入节点
+void DeleteList(List L);//删除链表
+Position Header(const List L);//头节点
+Position First(const List L);//第一个节点
+Position Advance(const Position P);//移动节点
+ElementType Retrieve(const Position P);//返回节点数据
 
 #endif // !Cursor.h
 
@@ -242,22 +243,22 @@ ElementType Retrieve(const Position P);
 #include<stdio.h>
 
 
-struct Node
+struct Node//定义结构体
 {
 	ElementType Element;
 	Position    Next;
 };
 
 
-struct Node CursorSpace[SpaceSize];
+struct Node CursorSpace[SpaceSize];//节点数组来模拟内存分配
 
 
 static Position CursorAlloc(void)
 {
 	Position P;
 
-	P = CursorSpace[0].Next;
-	CursorSpace[0].Next = CursorSpace[P].Next;
+	P = CursorSpace[0].Next;//P初始化为数组第一个元素
+	CursorSpace[0].Next = CursorSpace[P].Next;//数组第一个元素为P
 
 	return P;
 }
@@ -268,7 +269,7 @@ static void CursorFree(Position P)
 	CursorSpace[0].Next = P;
 }
 
-void InitializeCursorSpace(void)
+void InitializeCursorSpace(void)//用数组来模拟指针
 {
 	int i;
 
@@ -277,7 +278,7 @@ void InitializeCursorSpace(void)
 	CursorSpace[SpaceSize - 1].Next = 0;
 }
 
-List MakeEmpty(List L)
+List MakeEmpty(List L)//置空操作
 {
 	if (L != NULL)
 		DeleteList(L);
@@ -288,23 +289,23 @@ List MakeEmpty(List L)
 	return L;
 }
 
-int IsEmpty(List L)
+int IsEmpty(List L)//判断是否为空
 {
 	return CursorSpace[L].Next == 0;
 }
-int IsLast(Position P, List L)
+int IsLast(Position P, List L)//判断是否为尾
 {
 	return CursorSpace[P].Next == 0;
 }
-void PrintList(const List L)
+void PrintList(const List L)//打印链表
 {
 	Position P = Header(L);
 
-	if (IsEmpty(L))
+	if (IsEmpty(L))//判断是否为空
 		printf("Empty list\n");
 	else
 	{
-		while (!IsLast(P, L))
+		while (!IsLast(P, L))//若不为空，移动节点，打印数据
 		{
 			P = Advance(P);
 			printf("%d ", Retrieve(P));
@@ -313,13 +314,13 @@ void PrintList(const List L)
 	}
 
 }
-Position Find(ElementType X, List L)
+Position Find(ElementType X, List L)//查询某值的位置
 {
 	Position P;
 
 	P = CursorSpace[L].Next;
-    while (P && CursorSpace[P].Element != X)
-		   P = CursorSpace[P].Next;
+    while (P && CursorSpace[P].Element != X)//P不为空且数据不等于X
+		   P = CursorSpace[P].Next;//移动到下一节点
 
     return P;
 }
@@ -329,8 +330,8 @@ void Delete(ElementType X, List L)
 
 	P = FindPrevious(X, L);
 
-	if (!IsLast(P, L))  /* Assumption of header use */
-	{                      /* X is found; delete it */
+	if (!IsLast(P, L))  
+	{                      
 		TmpCell = CursorSpace[P].Next;
 		CursorSpace[P].Next = CursorSpace[TmpCell].Next;
 		CursorFree(TmpCell);
@@ -364,34 +365,34 @@ void Insert(ElementType X, List L, Position P)
 
 void DeleteList(List L)
 {
-	Position P, Tmp;
+	Position P, Tmp;//定义临时变量
 
-	P = CursorSpace[L].Next;  
+	P = CursorSpace[L].Next;  //P初始化为头节点
 	CursorSpace[L].Next = 0;
 	while (P != 0)
 	{
-		 Tmp = CursorSpace[P].Next;
+		 Tmp = CursorSpace[P].Next;//利用临时变量删除节点
 		 CursorFree(P);
 		 P = Tmp;
 	}
 }
 
-Position Header(List L)
+Position Header(List L)//头节点
 {
 	return L;
 }
 
-Position First(List L)
+Position First(List L)//第一个节点
 {
 	return CursorSpace[L].Next;
 }
 
-Position Advance(Position P)
+Position Advance(Position P)//移动节点
 {
 	return CursorSpace[P].Next;
 }
 
-ElementType Retrieve(Position P)
+ElementType Retrieve(Position P)//指向节点数据
 {
 	return CursorSpace[P].Element;
 }
@@ -451,18 +452,18 @@ int main()
 #pragma once
 
 #ifndef Stack.h
-struct StackRecord;
-typedef struct StackRecord * Stack;
+struct StackRecord;//定义结构体
+typedef struct StackRecord * Stack;//定义指向结构体的栈指针
 
 typedef int ElementType;
-int IsEmpty(Stack S);
-int IsFull(Stack S);
-Stack CreateStack(int MaxElements);
+int IsEmpty(Stack S);//判断是否为空
+int IsFull(Stack S);//判断是否为满
+Stack CreateStack(int MaxElements);//创建栈
 void DisposeStack(Stack S);
-void MakeEmpty(Stack S);
-void Push(ElementType X, Stack S);
-ElementType Top(Stack S);
-void Pop(Stack S);
+void MakeEmpty(Stack S);//置空
+void Push(ElementType X, Stack S);//进栈
+ElementType Top(Stack S);//栈顶
+void Pop(Stack S);//出栈
 ElementType TopAndPop(Stack S);
 #endif // !Stack.h
 
@@ -476,30 +477,30 @@ ElementType TopAndPop(Stack S);
 #include<malloc.h>
 
 struct StackRecord {
-	int Capacity;
-	int TopOfStack;
-	ElementType *Array;
+	int Capacity;//域
+	int TopOfStack;//栈顶
+	ElementType *Array;//数组
 };
-int IsEmpty(Stack S)
+int IsEmpty(Stack S)//判断是否为空
 {
 	return S->TopOfStack == -1;
 }
 
 int IsFull(Stack S)
 {
-	return S->TopOfStack == S->Capacity - 1;
+	return S->TopOfStack == S->Capacity - 1;//判断是否为满
 }
 
 Stack CreateStack(int MaxElements)
 {
 	Stack ret;
-	if ((ret = (Stack)malloc(sizeof(struct StackRecord))) != NULL)
+	if ((ret = (Stack)malloc(sizeof(struct StackRecord))) != NULL)//分配内存
 	{
-		ret->TopOfStack = -1;
-		ret->Capacity = MaxElements;
+		ret->TopOfStack = -1;//栈顶置-1
+		ret->Capacity = MaxElements;//域 为最大
 		if ((ret->Array = (ElementType*)malloc(MaxElements * sizeof(ElementType))) != NULL)
 			return ret;
-		free(ret);
+		free(ret);//释放
 	}
 	printf("Error! Out of memory! \n");
 	return NULL;
@@ -507,29 +508,29 @@ Stack CreateStack(int MaxElements)
 
 void DisposeStack(Stack S)
 {
-	if (S != NULL)
+	if (S != NULL)//若不为0，释放空间
 	{
 		free(S->Array);
 		free(S);
 	}
 }
 
-void MakeEmpty(Stack S)
+void MakeEmpty(Stack S)//置空
 {
 	S->TopOfStack = -1;
 }
 
-void Push(ElementType X, Stack S)
+void Push(ElementType X, Stack S)//让某值进栈压栈
 {
-	if (IsFull(S))
+	if (IsFull(S))//若满了，抛出错误
 	{
 		printf("Error! The stack is full! \n");
 		return;
 	}
-	(S->Array)[++(S->TopOfStack)] = X;
+	(S->Array)[++(S->TopOfStack)] = X;否则，栈顶为该值
 }
 
-ElementType Top(Stack S)
+ElementType Top(Stack S)//返回栈顶数据
 {
 	if (IsEmpty(S))
 	{
@@ -539,7 +540,7 @@ ElementType Top(Stack S)
 	return (S->Array)[(S->TopOfStack)];
 }
 
-void Pop(Stack S)
+void Pop(Stack S)//出栈
 {
 	if (IsEmpty(S))
 	{
@@ -556,7 +557,7 @@ ElementType TopAndPop(Stack S)
 		printf("Error! The stack is empty! \n");
 		return 0;
 	}
-	return (S->Array)[(S->TopOfStack)--];
+	return (S->Array)[(S->TopOfStack)--];返回栈数据
 }
 ```
 
@@ -598,20 +599,20 @@ int main()
 #include <stdio.h>
 #include <malloc.h>
  
-struct _Node;
+struct _Node;//定义结构体
 typedef struct _Node Node;
-typedef Node *PtrToNode;
+typedef Node *PtrToNode;//结构体指针
 typedef PtrToNode Stack;
 
 typedef int ElementType;
  
-int IsEmpty(Stack S);
-Stack CreateStack();
-void DisposeStack(Stack S);
-void MakeEmpty(Stack S);
-void Push(ElementType X, Stack S);
-ElementType Top(Stack S);
-void Pop(Stack S);
+int IsEmpty(Stack S);//判断是否为空
+Stack CreateStack();//创建栈
+void DisposeStack(Stack S);//摧毁释放栈
+void MakeEmpty(Stack S);//置空
+void Push(ElementType X, Stack S);//压栈
+ElementType Top(Stack S);//返回栈顶数据
+void Pop(Stack S);//出栈
 #endif // !Stack.h
 ```
 
@@ -620,21 +621,21 @@ void Pop(Stack S);
 ```
 #include "Stack.h"
 
-struct _Node
+struct _Node//结构体
 {
 	ElementType Element;
 	struct _Node *Next;
 };
 
-int IsEmpty(Stack S)
+int IsEmpty(Stack S)//若为NULL即为空
 {
 	return S->Next == NULL;
 }
 
-Stack CreateStack()
+Stack CreateStack()//创建栈
 {
 	Stack ret;
-	if ((ret = (Stack)malloc(sizeof(Node))) != NULL)
+	if ((ret = (Stack)malloc(sizeof(Node))) != NULL)//分配空间
 	{
 		ret->Next = NULL;
 		return ret;
@@ -643,7 +644,7 @@ Stack CreateStack()
 	return 0;
 }
 
-void DisposeStack(Stack S)
+void DisposeStack(Stack S)//定义临时变量释放栈
 {
 	PtrToNode p = S;
 	while (S != NULL)
@@ -654,7 +655,7 @@ void DisposeStack(Stack S)
 	}
 }
 
-void MakeEmpty(Stack S)
+void MakeEmpty(Stack S)//置空
 {
 	if (S == NULL)
 	{
@@ -665,7 +666,7 @@ void MakeEmpty(Stack S)
 		Pop(S);
 }
 
-void Push(ElementType X, Stack S)
+void Push(ElementType X, Stack S)//压栈操作
 {
 	PtrToNode t;
 	if ((t = (PtrToNode)malloc(sizeof(Node))) != NULL)
@@ -744,18 +745,18 @@ int main()
 #include <stdio.h>
 #include<malloc.h>
 
-struct QueueRecord;
-typedef struct QueueRecord *Queue;
+struct QueueRecord;//定义结构体
+typedef struct QueueRecord *Queue;//定义结构体指针
 typedef int ElementType;
-int IsEmpty(Queue Q);
-int IsFull(Queue Q);
-Queue CreateQueue(int MaxElements);
-void DisposeQueue(Queue Q);
-void MakeEmpty(Queue Q);
-void Enqueue(ElementType X, Queue Q);
-ElementType Front(Queue Q);
-void Dequeue(Queue Q);
-ElementType FrontAndDequeue(Queue Q);
+int IsEmpty(Queue Q);//判断是否为空
+int IsFull(Queue Q);//判断是否为满
+Queue CreateQueue(int MaxElements);//创建队列
+void DisposeQueue(Queue Q);//释放队列
+void MakeEmpty(Queue Q);//置空
+void Enqueue(ElementType X, Queue Q);//入队操作
+ElementType Front(Queue Q);//返回头元素
+void Dequeue(Queue Q);//出队操作
+ElementType FrontAndDequeue(Queue Q);//数据全部出队
 #endif // !Queue.h
 
 ```
@@ -770,7 +771,7 @@ struct QueueRecord {
 	int Front;
 	int Rear;
 	int Size;
-	ElementType *Array;
+	ElementType *Array;//数组
 };
 
 static int
@@ -793,26 +794,26 @@ int IsFull(Queue Q)
 Queue CreateQueue(int MaxElements)
 {
 	Queue Q;
-	Q = (Queue)malloc(sizeof(struct QueueRecord));
+	Q = (Queue)malloc(sizeof(struct QueueRecord));//动态分配内存
 	if (Q == NULL)
 	{
 		printf("Out of space!\n");
 		return NULL;
 	}
-	Q->Array = (ElementType*)malloc(sizeof(ElementType) * MaxElements);
+	Q->Array = (ElementType*)malloc(sizeof(ElementType) * MaxElements);//动态分配内存
 	if (Q->Array == NULL)
 	{
 		printf("Out of space!\n");
 		return NULL;
 	}
-	Q->Capacity = MaxElements;
-	MakeEmpty(Q);
+	Q->Capacity = MaxElements;//给域赋值
+	MakeEmpty(Q);//置空
 	return Q;
 
 	
 }
 
-void DisposeQueue(Queue Q)
+void DisposeQueue(Queue Q)//释放队列
 {
 	if (Q)
 	{
@@ -821,44 +822,44 @@ void DisposeQueue(Queue Q)
 	}
 }
 
-void MakeEmpty(Queue Q)
+void MakeEmpty(Queue Q)//置空
 {
-	Q->Size = 0;
+	Q->Size = 0;//大小为0
 	Q->Front = 1;
 	Q->Rear = 0;
 
 }
 
-void Enqueue(ElementType X, Queue Q)
+void Enqueue(ElementType X, Queue Q)//入队操作
 {
-	if (IsFull(Q))
+	if (IsFull(Q))//满了
 	{
 		printf("Queue is full!\n");
 		return;
 	}
 	else
 	{
-		Q->Size++;
+		Q->Size++;//大小+1
 		Q->Rear = Succ(Q->Rear, Q);     //Q->Rear = (Q->Rear + 1) % Q->Capacity ? Q->Rear + 1 : 0;
-		Q->Array[Q->Rear] = X;
+		Q->Array[Q->Rear] = X;//移动队列然后赋值
 	}
 
 	
 }
 
-ElementType Front(Queue Q)
+ElementType Front(Queue Q)//返回队头数据
 {
 	if (!IsEmpty(Q))
-		return Q->Array[Q->Front];
+		return Q->Array[Q->Front];//返回队头数据
 	printf("Empty queue");
 	return 0;
 }
 
-void Dequeue(Queue Q)
+void Dequeue(Queue Q)//出队列
 {
 	if (!IsEmpty(Q))
 	{
-		Q->Size--;
+		Q->Size--;//大小-1
 		Q->Front = Succ(Q->Front, Q);
 	}
 	else
